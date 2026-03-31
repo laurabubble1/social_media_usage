@@ -37,8 +37,8 @@ jobs:
             npm install
           fi
 
-      - name: Build app
-        run: npm run build
+      - name: Build app for GitHub Pages
+        run: npm run build:pages
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
