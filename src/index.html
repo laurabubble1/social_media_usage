@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usage des médias sociaux et bien‑être étudiant</title>
+    <link rel="stylesheet" href="assets/styles/main.css">
+</head>
+<body>
+    <!-- Navigation fixe -->
+    <nav>
+        <h1>Usage des médias sociaux et bien‑être étudiant</h1>
+        <ul id="nav-menu">
+            <li><a href="#intro" class="nav-link active">Accueil</a></li>
+            <li><a href="#section1" class="nav-link">Les différences entre les plateformes</a></li>
+            <li><a href="#section2" class="nav-link">Influence du temps d'utilisation</a></li>
+            <li><a href="#section3" class="nav-link">Usage, Addiction et Conflits</a></li>
+            <li><a href="#section4" class="nav-link">Usage, Sommeil et Impact Académique</a></li>
+            <li><a href="#section5" class="nav-link">Addiction et Impact Académique</a></li>
+        </ul>
+    </nav>
+
+    <!-- Contenu principal -->
+    <div class="main-container">
+        <div class="content">
+            <!-- Section d'intro -->
+            <div id="intro" class="intro-section story-step is-visible">
+                <div>
+                    <h1>Usage des médias sociaux et bien‑être étudiant</h1>
+                    <p id="loading" class="loading">Chargement des données...</p>
+                    <p class="intro-description">Comprendre un phénomène en croissance</p>
+                </div>
+            </div>
+
+            <section id="section1" class="story-step">
+                <h2>Les différences entre les plateformes</h2>
+                <p>Chaque plateforme sur le sommeil, la santé mentale, les conflits sociaux et l'impact académique négatif</p>
+                <div class="chart-container" id="viz1"></div>
+            </section>
+
+            <section id="section2" class="story-step">
+                <h2>Influence du temps d'utilisation</h2>
+                <p>Le temps passé chaque jour et son impact sur la santé mentale et le sommeil</p>
+                <div class="chart-container" id="viz2"></div>
+            </section>
+
+            <section id="section3" class="story-step">
+                <h2>Usage, Addiction et Conflits</h2>
+                <p>L'usage des médias sociaux et son impact sur l'addiction et les conflits sociaux</p>
+                <div class="chart-container" id="viz3"></div>
+            </section>
+
+            <section id="section4" class="story-step">
+                <h2>Impact Académique, Usage et Sommeil</h2>
+                <p>Deux beeswarms comparent la perception d'un impact négatif des réseaux sociaux sur les études selon le temps d'utilisation et le nombre d'heures de sommeil.</p>
+                <div class="chart-container" id="viz4"></div>
+            </section>
+
+            <section id="section5" class="story-step">
+                <h2>Addiction et Impact Académique</h2>
+                <p>Un diagramme à lignes divergentes montre comment la distribution de l'impact négatif sur les études évolue selon le score d'addiction, avec un toggle entre décompte et pourcentage.</p>
+                <div class="chart-container" id="viz5"></div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Erreur -->
+    <div id="error" class="error is-hidden"></div>
+
+    <!-- D3.js v7 -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <!-- Scripts -->
+    <script type="module" src="index.js"></script>
+</body>
+</html>
