@@ -95,6 +95,22 @@ function buildOverlayBands(scores, xScale, innerWidth) {
     return createScoreBands(scores, xScale, innerWidth);
 }
 
+function buildImpactSummaryTitle(datum) {
+    if (!datum || !datum.totalCount) {
+        return 'Aucune donnée';
+    }
+
+    if (datum.yesPercentage === datum.noPercentage) {
+        return `Répartition équilibrée : ${formatNumber(datum.yesPercentage, 1)} %`;
+    }
+
+    if (datum.yesPercentage > datum.noPercentage) {
+        return `Impact négatif majoritaire : ${formatNumber(datum.yesPercentage, 1)} %`;
+    }
+
+    return `Pas d'impact majoritaire : ${formatNumber(datum.noPercentage, 1)} %`;
+}
+
 function renderChart(container, distribution, mode) {
     const chartContainer = container.querySelector('.diverging-chart');
     chartContainer.innerHTML = '';
@@ -225,7 +241,7 @@ function renderChart(container, distribution, mode) {
         .attr('x', -innerHeight / 2)
         .attr('y', -54)
         .attr('text-anchor', 'middle')
-        .text(mode === 'count' ? 'Nombre d etudiants' : 'Part des etudiants');
+        .text(mode === 'count' ? 'Nombre d\'étudiants' : 'Part des etudiants');
 
     const overlayGroup = chartGroup.append('g');
     const activeBand = overlayGroup.append('rect')
@@ -261,29 +277,28 @@ function renderChart(container, distribution, mode) {
                 .attr('x2', xScale(band.score))
                 .attr('opacity', 1);
 
-            chartGroup.selectAll('.diverging-point')
-                .classed('is-dimmed', (point) => point.score !== band.score)
-                .classed('is-highlighted', (point) => point.score === band.score);
-
             const datum = distribution.find((item) => item.score === band.score);
             showTooltip(tooltip, event, {
-                title: `Score d addiction : ${band.score}`,
+                title: buildImpactSummaryTitle(datum),
                 lines: [
-                    `Impact negatif : ${modeConfig.tooltipFormatter(datum ? modeConfig.positiveAccessor(datum) : 0)}`,
-                    `Pas d impact negatif : ${modeConfig.tooltipFormatter(datum ? modeConfig.negativeAccessor(datum) : 0)}`,
-                    `Etudiants representes : ${datum?.totalCount || 0}`
+                    `Score d'addiction : ${band.score}`,
+                    `Impact négatif : ${datum?.yesCount || 0} / ${datum?.totalCount || 0} (${formatNumber(datum?.yesPercentage || 0, 1)} %)`,
+                    `Pas d'impact négatif : ${datum?.noCount || 0} / ${datum?.totalCount || 0} (${formatNumber(datum?.noPercentage || 0, 1)} %)`,
+                    `${mode === 'count' ? 'Valeurs affichées' : 'Mode pourcentage'} : ${modeConfig.tooltipFormatter(datum ? modeConfig.positiveAccessor(datum) : 0)} / ${modeConfig.tooltipFormatter(datum ? modeConfig.negativeAccessor(datum) : 0)}`
                 ]
             });
         })
         .on('mousemove', (event) => {
+            const pointerX = d3.pointer(event, chartGroup.node())[0];
+            activeGuide
+                .attr('x1', pointerX)
+                .attr('x2', pointerX)
+                .attr('opacity', 1);
             moveTooltip(tooltip, event);
         })
         .on('mouseleave', function () {
             activeBand.attr('opacity', 0);
             activeGuide.attr('opacity', 0);
-            chartGroup.selectAll('.diverging-point')
-                .classed('is-dimmed', false)
-                .classed('is-highlighted', false);
             hideTooltip(tooltip);
         });
 

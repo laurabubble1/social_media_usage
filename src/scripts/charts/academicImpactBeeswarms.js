@@ -6,14 +6,14 @@ import { createBands } from '../bandHelpers.js';
 const SWARM_CONFIGS = [
     {
         key: 'avg_daily_usage_hours',
-        title: 'Impact académique selon le temps d\'utilisation',
-        axisLabel: 'Heures passées sur les médias sociaux par jour',
-        tooltipLabel: 'Heures d\'utilisation',
+        title: 'Impact academique selon le temps d utilisation',
+        axisLabel: 'Heures passees sur les medias sociaux par jour',
+        tooltipLabel: 'Heures d utilisation',
         formatter: (value) => `${formatNumber(value, 1)} h`
     },
     {
         key: 'sleep_hours_per_night',
-        title: 'Impact académique selon le sommeil',
+        title: 'Impact academique selon le sommeil',
         axisLabel: 'Heures de sommeil par nuit',
         tooltipLabel: 'Heures de sommeil',
         formatter: (value) => `${formatNumber(value, 1)} h`
@@ -65,6 +65,25 @@ function runBeeswarmSimulation(nodes, xScale, rowScale) {
     return simulationNodes;
 }
 
+function buildImpactSummaryTitle(yesCount, noCount, totalCount) {
+    if (!totalCount) {
+        return 'Aucune donnée';
+    }
+
+    const yesShare = (yesCount / totalCount) * 100;
+    const noShare = (noCount / totalCount) * 100;
+
+    if (yesCount === noCount) {
+        return `Répartition équilibrée : ${formatNumber(yesShare, 1)} %`;
+    }
+
+    if (yesCount > noCount) {
+        return `Impact négatif majoritaire : ${formatNumber(yesShare, 1)} %`;
+    }
+
+    return `Pas d'impact majoritaire : ${formatNumber(noShare, 1)} %`;
+}
+
 function renderModuleShell(container) {
     const shell = createChartModule(container, {
         title: 'Beeswarms sur l impact academique',
@@ -73,16 +92,16 @@ function renderModuleShell(container) {
             <div class="beeswarm-legend">
                 <div class="beeswarm-legend-item">
                     <span class="beeswarm-legend-dot negative"></span>
-                    <span>Impact négatif déclaré</span>
+                    <span>Impact negatif declare</span>
                 </div>
                 <div class="beeswarm-legend-item">
                     <span class="beeswarm-legend-dot positive"></span>
-                    <span>Pas d'impact négatif déclaré</span>
+                    <span>Pas d impact negatif declare</span>
                 </div>
             </div>
         `,
         chartMarkup: '<div class="beeswarm-grid"></div>',
-        note: 'Chaque bille représente un étudiant. La bande verticale au survol résume les réponses Oui et Non pour une même valeur d\'heures.'
+        note: 'Chaque bille represente un etudiant. Le survol resume les reponses Oui et Non pour une meme valeur.'
     });
 
     return {
@@ -171,11 +190,18 @@ function renderSingleBeeswarm(config, data, parent, tooltip) {
         .text(config.axisLabel);
 
     const bandOverlay = chartGroup.append('g').attr('class', 'beeswarm-band-overlay');
-    const activeBand = bandOverlay.append('rect')
+    bandOverlay.append('rect')
         .attr('class', 'beeswarm-active-band')
         .attr('y', 0)
         .attr('height', innerHeight)
         .attr('fill', bandColor)
+        .attr('opacity', 0)
+        .attr('pointer-events', 'none');
+
+    const activeGuide = bandOverlay.append('line')
+        .attr('class', 'beeswarm-guide-line')
+        .attr('y1', 0)
+        .attr('y2', innerHeight)
         .attr('opacity', 0)
         .attr('pointer-events', 'none');
 
@@ -193,33 +219,36 @@ function renderSingleBeeswarm(config, data, parent, tooltip) {
         .attr('fill', 'transparent')
         .on('mouseenter', function (event, datum) {
             const summary = summaries.find((item) => item.value === datum.value);
+            const yesCount = summary?.yesCount || 0;
+            const noCount = summary?.noCount || 0;
+            const totalCount = summary?.totalCount || 0;
+            const yesShare = totalCount ? (yesCount / totalCount) * 100 : 0;
+            const noShare = totalCount ? (noCount / totalCount) * 100 : 0;
 
-            activeBand
-                .attr('x', datum.x)
-                .attr('width', datum.width)
+            activeGuide
+                .attr('x1', xScale(datum.value))
+                .attr('x2', xScale(datum.value))
                 .attr('opacity', 1);
 
-            chartGroup.selectAll('.beeswarm-dot')
-                .classed('is-dimmed', (node) => node.xValue !== datum.value)
-                .classed('is-highlighted', (node) => node.xValue === datum.value);
-
             showTooltip(tooltip, event, {
-                title: `${config.tooltipLabel} : ${config.formatter(datum.value)}`,
+                title: buildImpactSummaryTitle(yesCount, noCount, totalCount),
                 lines: [
-                    `Impact négatif : ${summary?.yesCount || 0}`,
-                    `Pas d'impact négatif : ${summary?.noCount || 0}`,
-                    `Étudiants représentés : ${summary?.totalCount || 0}`
+                    `${config.tooltipLabel} : ${config.formatter(datum.value)}`,
+                    `Impact négatif : ${yesCount} / ${totalCount} (${formatNumber(yesShare, 1)} %)`,
+                    `Pas d'impact négatif : ${noCount} / ${totalCount} (${formatNumber(noShare, 1)} %)`
                 ]
             });
         })
         .on('mousemove', function (event) {
+            const pointerX = d3.pointer(event, chartGroup.node())[0];
+            activeGuide
+                .attr('x1', pointerX)
+                .attr('x2', pointerX)
+                .attr('opacity', 1);
             moveTooltip(tooltip, event);
         })
         .on('mouseleave', function () {
-            activeBand.attr('opacity', 0);
-            chartGroup.selectAll('.beeswarm-dot')
-                .classed('is-dimmed', false)
-                .classed('is-highlighted', false);
+            activeGuide.attr('opacity', 0);
             hideTooltip(tooltip);
         });
 
@@ -232,6 +261,7 @@ function renderSingleBeeswarm(config, data, parent, tooltip) {
         .attr('cy', (node) => node.y)
         .attr('r', 4)
         .attr('fill', (node) => node.impact ? negativeColor : positiveColor)
+        .attr('pointer-events', 'none')
         .attr('opacity', 0.88);
 
     svg.append('title').text(config.title);

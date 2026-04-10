@@ -129,10 +129,10 @@ export function renderAddictionUsageHeatmap(data, container) {
         .on('mouseenter', function (event, datum) {
             d3.select(this).classed('is-hovered', true);
             showTooltip(tooltip, event, {
-                title: `${datum.hour} h par jour`,
+                title: `Conflits moyens: ${formatNumber(datum.averageConflicts)}`,
                 lines: [
                     `Score d'addiction : ${datum.score}`,
-                    `Conflit moyen : ${datum.averageConflicts === null ? 'Aucune donnée' : formatNumber(datum.averageConflicts, 2)}`,
+                    `Heures par jour : ${ datum.hour }`,
                     `Étudiants représentés : ${datum.count}`
                 ]
             });

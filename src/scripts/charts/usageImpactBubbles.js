@@ -48,6 +48,14 @@ function buildBubbleData(groups) {
     });
 }
 
+function getSeriesColor(seriesKey, mentalColor, sleepColor) {
+    return seriesKey === 'mental_health_score' ? mentalColor : sleepColor;
+}
+
+function areaToRadius(area) {
+    return Math.sqrt(area / Math.PI);
+}
+
 function renderModuleShell(container) {
     const legendMarkup = `
         <div class="bubble-legend">
@@ -81,6 +89,7 @@ function renderSeriesLine(chartGroup, seriesData, xScale, yScale, color) {
 
     chartGroup.append('path')
         .datum(seriesData)
+        .attr('class', `bubble-line ${seriesData[0].seriesKey}`)
         .attr('fill', 'none')
         .attr('stroke', color)
         .attr('stroke-width', 2)
@@ -88,6 +97,32 @@ function renderSeriesLine(chartGroup, seriesData, xScale, yScale, color) {
         .attr('stroke-linejoin', 'round')
         .attr('opacity', 0.65)
         .attr('d', lineGenerator);
+}
+
+function updateSeriesFocus(chartGroup, activeSeriesKey) {
+    chartGroup.selectAll('.bubble-point')
+        .classed('is-dimmed', (datum) => activeSeriesKey !== null && datum.seriesKey !== activeSeriesKey)
+        .classed('is-highlighted', (datum) => activeSeriesKey !== null && datum.seriesKey === activeSeriesKey);
+
+    chartGroup.selectAll('.bubble-line')
+        .classed('is-dimmed', function () {
+            if (activeSeriesKey === null) {
+                return false;
+            }
+
+            return !d3.select(this).classed(activeSeriesKey);
+        })
+        .classed('is-highlighted', function () {
+            if (activeSeriesKey === null) {
+                return false;
+            }
+
+            return d3.select(this).classed(activeSeriesKey);
+        });
+
+    if (activeSeriesKey !== null) {
+        chartGroup.select(`.bubble-series.${activeSeriesKey}`).raise();
+    }
 }
 
 export function renderUsageImpactBubbles(data, container) {
@@ -121,9 +156,9 @@ export function renderUsageImpactBubbles(data, container) {
         .domain([0, 10])
         .range([innerHeight, 0]);
 
-    const radiusScale = d3.scaleSqrt()
+    const areaScale = d3.scaleLinear()
         .domain(radiusDomain)
-        .range([6, 26]);
+        .range([Math.PI * 3 ** 2, Math.PI * 14 ** 2]);
 
     chartGroup.append('g')
         .attr('class', 'bubble-grid')
@@ -154,48 +189,56 @@ export function renderUsageImpactBubbles(data, container) {
         .attr('text-anchor', 'middle')
         .text('Valeur moyenne (0 à 10)');
 
-    renderSeriesLine(
-        chartGroup,
-        bubbleData.filter((datum) => datum.seriesKey === 'mental_health_score'),
-        xScale,
-        yScale,
-        mentalColor
-    );
+    chartGroup.on('mouseleave', () => {
+        chartGroup.selectAll('.bubble-point').classed('is-hovered', false);
+        updateSeriesFocus(chartGroup, null);
+        hideTooltip(tooltip);
+    });
 
-    renderSeriesLine(
-        chartGroup,
-        bubbleData.filter((datum) => datum.seriesKey === 'sleep_hours_per_night'),
-        xScale,
-        yScale,
-        sleepColor
-    );
+    const seriesGroups = d3.group(bubbleData, (datum) => datum.seriesKey);
 
-    chartGroup.selectAll('.bubble-point')
-        .data(bubbleData)
-        .enter()
-        .append('circle')
-        .attr('class', (datum) => `bubble-point ${datum.seriesKey}`)
-        .attr('cx', (datum) => xScale(datum.usageHours))
-        .attr('cy', (datum) => yScale(datum.yValue))
-        .attr('r', (datum) => radiusScale(datum.count))
-        .attr('fill', (datum) => datum.seriesKey === 'mental_health_score' ? mentalColor : sleepColor)
-        .attr('opacity', 0.7)
-        .on('mouseenter', function (event, datum) {
-            d3.select(this).classed('is-hovered', true);
-            showTooltip(tooltip, event, {
-                title: datum.seriesLabel,
-                lines: [
-                    `Utilisation moyenne : ${formatNumber(datum.usageHours, 1)} h`,
-                    `${datum.tooltipLabel} : ${formatNumber(datum.yValue, 2)}`,
-                    `Étudiants représentés : ${datum.count}`
-                ]
+    Array.from(seriesGroups, ([seriesKey, seriesData]) => {
+        const seriesGroup = chartGroup.append('g')
+            .attr('class', `bubble-series ${seriesKey}`);
+
+        renderSeriesLine(
+            seriesGroup,
+            seriesData,
+            xScale,
+            yScale,
+            getSeriesColor(seriesKey, mentalColor, sleepColor)
+        );
+
+        seriesGroup.selectAll('.bubble-point')
+            .data(seriesData)
+            .enter()
+            .append('circle')
+            .attr('class', (datum) => `bubble-point ${datum.seriesKey}`)
+            .attr('cx', (datum) => xScale(datum.usageHours))
+            .attr('cy', (datum) => yScale(datum.yValue))
+            .attr('r', (datum) => areaToRadius(areaScale(datum.count)))
+            .attr('fill', (datum) => getSeriesColor(datum.seriesKey, mentalColor, sleepColor))
+            .attr('opacity', 0.7)
+            .on('mouseenter', function (event, datum) {
+                updateSeriesFocus(chartGroup, datum.seriesKey);
+                chartGroup.selectAll('.bubble-point').classed('is-hovered', false);
+                d3.select(this).classed('is-hovered', true);
+                showTooltip(tooltip, event, {
+                    title: datum.seriesLabel,
+                    lines: [
+                        `Utilisation moyenne : ${formatNumber(datum.usageHours, 1)} h`,
+                        `${datum.tooltipLabel} : ${formatNumber(datum.yValue, 2)}`,
+                        `Étudiants représentés : ${datum.count}`
+                    ]
+                });
+            })
+            .on('mousemove', (event) => {
+                moveTooltip(tooltip, event);
+            })
+            .on('mouseleave', function () {
+                updateSeriesFocus(chartGroup, null);
+                d3.select(this).classed('is-hovered', false);
+                hideTooltip(tooltip);
             });
-        })
-        .on('mousemove', (event) => {
-            moveTooltip(tooltip, event);
-        })
-        .on('mouseleave', function () {
-            d3.select(this).classed('is-hovered', false);
-            hideTooltip(tooltip);
-        });
+    });
 }
