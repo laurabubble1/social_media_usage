@@ -36,8 +36,7 @@ function buildHeatmapData(data) {
 
 function renderModuleShell(container) {
     const shell = createChartModule(container, {
-        title: 'Heat map des conflits moyens',
-        moduleTag: 'Module addictionUsageHeatmap',
+        title: 'Conflits selon l’utilisation et l’addiction',
         topContent: `
             <div class="heatmap-legend">
                 <span>Faible conflit moyen</span>
@@ -46,7 +45,7 @@ function renderModuleShell(container) {
             </div>
         `,
         chartMarkup: '<div class="heatmap-chart"></div>',
-        note: 'Chaque case représente une combinaison entre une heure d\'utilisation quotidienne entière et un score d\'addiction. La couleur indique le niveau moyen de conflits associé.'
+        note: 'Chaque case représente une combinaison entre une heure d’utilisation quotidienne entière et un score d’addiction. La couleur indique le niveau moyen de conflits associé.'
     });
 
     return {
@@ -103,7 +102,7 @@ export function renderAddictionUsageHeatmap(data, container) {
         .attr('x', innerWidth / 2)
         .attr('y', innerHeight + 42)
         .attr('text-anchor', 'middle')
-        .text('Heures d\'utilisation quotidiennes (entières)');
+        .text('Heures d’utilisation quotidiennes');
 
     chartGroup.append('text')
         .attr('class', 'heatmap-axis-label')
@@ -111,7 +110,7 @@ export function renderAddictionUsageHeatmap(data, container) {
         .attr('x', -innerHeight / 2)
         .attr('y', -48)
         .attr('text-anchor', 'middle')
-        .text('Score d\'addiction');
+        .text('Score d’addiction');
 
     chartGroup.selectAll('.heatmap-cell')
         .data(cells)
@@ -129,15 +128,15 @@ export function renderAddictionUsageHeatmap(data, container) {
         .on('mouseenter', function (event, datum) {
             d3.select(this).classed('is-hovered', true);
             showTooltip(tooltip, event, {
-                title: `Conflits moyens: ${formatNumber(datum.averageConflicts)}`,
+                title: `Conflits moyens : ${formatNumber(datum.averageConflicts || 0, 2)}`,
                 lines: [
-                    `Score d'addiction : ${datum.score}`,
-                    `Heures par jour : ${ datum.hour }`,
+                    `Score d’addiction : ${datum.score}`,
+                    `Heures par jour : ${datum.hour}`,
                     `Étudiants représentés : ${datum.count}`
                 ]
             });
         })
-        .on('mousemove', function (event, datum) {
+        .on('mousemove', (event) => {
             moveTooltip(tooltip, event);
         })
         .on('mouseleave', function () {

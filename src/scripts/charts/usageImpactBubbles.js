@@ -13,7 +13,7 @@ const SERIES = [
         key: 'sleep_hours_per_night',
         label: 'Sommeil',
         colorVariable: '--color-series-sleep',
-        tooltipLabel: 'Nombre moyen d\'heures de sommeil'
+        tooltipLabel: 'Nombre moyen d’heures de sommeil'
     }
 ];
 
@@ -21,13 +21,11 @@ function buildUsageGroups(data) {
     return Array.from(
         d3.rollup(
             data,
-            (students) => {
-                return {
-                    count: students.length,
-                    mental_health_score: d3.mean(students, (student) => student.mental_health_score),
-                    sleep_hours_per_night: d3.mean(students, (student) => student.sleep_hours_per_night)
-                };
-            },
+            (students) => ({
+                count: students.length,
+                mental_health_score: d3.mean(students, (student) => student.mental_health_score),
+                sleep_hours_per_night: d3.mean(students, (student) => student.sleep_hours_per_night)
+            }),
             (student) => student.avg_daily_usage_hours
         ),
         ([usageHours, values]) => ({ usageHours: Number(usageHours), ...values })
@@ -69,11 +67,10 @@ function renderModuleShell(container) {
     `;
 
     const shell = createChartModule(container, {
-        title: 'Bubble plot sommeil et santé mentale',
-        moduleTag: 'Module usageImpactBubbles',
+        title: 'Sommeil et santé mentale selon l’utilisation',
         topContent: legendMarkup,
         chartMarkup: '<div class="bubble-chart"></div>',
-        note: 'Chaque bulle représente un groupe d\'étudiants partageant le même nombre d\'heures d\'utilisation. La taille indique combien d\'étudiants appartiennent à ce groupe.'
+        note: 'Chaque bulle représente un groupe d’étudiants partageant le même temps d’utilisation. La taille indique combien d’étudiants appartiennent à ce groupe.'
     });
 
     return {

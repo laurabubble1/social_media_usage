@@ -6,14 +6,14 @@ import { createBands } from '../bandHelpers.js';
 const SWARM_CONFIGS = [
     {
         key: 'avg_daily_usage_hours',
-        title: 'Impact academique selon le temps d utilisation',
-        axisLabel: 'Heures passees sur les medias sociaux par jour',
-        tooltipLabel: 'Heures d utilisation',
+        title: 'Impact académique selon l’utilisation',
+        axisLabel: 'Heures passées sur les médias sociaux par jour',
+        tooltipLabel: 'Heures d’utilisation',
         formatter: (value) => `${formatNumber(value, 1)} h`
     },
     {
         key: 'sleep_hours_per_night',
-        title: 'Impact academique selon le sommeil',
+        title: 'Impact académique selon le sommeil',
         axisLabel: 'Heures de sommeil par nuit',
         tooltipLabel: 'Heures de sommeil',
         formatter: (value) => `${formatNumber(value, 1)} h`
@@ -49,18 +49,27 @@ function buildSwarmNodes(data, valueKey) {
     }));
 }
 
-function runBeeswarmSimulation(nodes, xScale, rowScale) {
+function runBeeswarmSimulation(nodes, xScale, rowScale, innerHeight) {
+    const dotRadius = 4;
+    const verticalPadding = 4;
     const simulationNodes = nodes.map((node) => ({ ...node }));
 
     const simulation = d3.forceSimulation(simulationNodes)
-        .force('x', d3.forceX((node) => xScale(node.xValue)).strength(1))
+        .force('x', d3.forceX((node) => xScale(node.xValue)).strength(6))
         .force('y', d3.forceY((node) => rowScale(node.yCategory)).strength(0.5))
-        .force('collide', d3.forceCollide(5))
+        .force('collide', d3.forceCollide(dotRadius + 1))
         .stop();
 
     for (let index = 0; index < 300; index += 1) {
         simulation.tick();
     }
+
+    const chartTop = dotRadius + verticalPadding;
+    const chartBottom = innerHeight - dotRadius - verticalPadding;
+
+    simulationNodes.forEach((node) => {
+        node.y = Math.max(chartTop, Math.min(chartBottom, node.y));
+    });
 
     return simulationNodes;
 }
@@ -81,27 +90,26 @@ function buildImpactSummaryTitle(yesCount, noCount, totalCount) {
         return `Impact négatif majoritaire : ${formatNumber(yesShare, 1)} %`;
     }
 
-    return `Pas d'impact majoritaire : ${formatNumber(noShare, 1)} %`;
+    return `Pas d’impact majoritaire : ${formatNumber(noShare, 1)} %`;
 }
 
 function renderModuleShell(container) {
     const shell = createChartModule(container, {
-        title: 'Beeswarms sur l impact academique',
-        moduleTag: 'Module academicImpactBeeswarms',
+        title: 'Impact académique selon l’utilisation et le sommeil',
         topContent: `
             <div class="beeswarm-legend">
                 <div class="beeswarm-legend-item">
                     <span class="beeswarm-legend-dot negative"></span>
-                    <span>Impact negatif declare</span>
+                    <span>Impact négatif déclaré</span>
                 </div>
                 <div class="beeswarm-legend-item">
                     <span class="beeswarm-legend-dot positive"></span>
-                    <span>Pas d impact negatif declare</span>
+                    <span>Pas d’impact négatif déclaré</span>
                 </div>
             </div>
         `,
         chartMarkup: '<div class="beeswarm-grid"></div>',
-        note: 'Chaque bille represente un etudiant. Le survol resume les reponses Oui et Non pour une meme valeur.'
+        note: 'Le survol résume la répartition des réponses pour une même valeur d’utilisation ou de sommeil.'
     });
 
     return {
@@ -131,14 +139,14 @@ function renderSingleBeeswarm(config, data, parent, tooltip) {
     const nodes = buildSwarmNodes(data, config.key);
 
     const axisColor = getCssVariable('--color-text-secondary');
-    const gridColor = getCssVariable('--color-border');
+    const gridColor = getCssVariable('--color-text-secondary');
     const positiveColor = getCssVariable('--color-beeswarm-positive');
     const negativeColor = getCssVariable('--color-beeswarm-negative');
     const bandColor = getCssVariable('--color-beeswarm-band');
 
     const { svg, chartGroup, innerWidth, innerHeight } = createSVG(canvas, {
-        height: 240,
-        margin: { top: 12, right: 12, bottom: 48, left: 88 }
+        height: 390,
+        margin: { top: 12, right: 12, bottom: 74, left: 88 }
     });
 
     const xExtent = d3.extent(nodes, (node) => node.xValue);
@@ -150,11 +158,16 @@ function renderSingleBeeswarm(config, data, parent, tooltip) {
         .nice()
         .range([0, innerWidth]);
 
+    const desiredRowGap = 104;
+    const rowMidpoint = innerHeight / 2;
+    const topRowY = rowMidpoint - (desiredRowGap / 2);
+    const bottomRowY = rowMidpoint + (desiredRowGap / 2);
+
     const rowScale = d3.scalePoint()
         .domain([0, 1])
-        .range([innerHeight - 70, 70]);
+        .range([bottomRowY, topRowY]);
 
-    const simulatedNodes = runBeeswarmSimulation(nodes, xScale, rowScale);
+    const simulatedNodes = runBeeswarmSimulation(nodes, xScale, rowScale, innerHeight);
 
     chartGroup.append('g')
         .attr('class', 'beeswarm-grid-axis')
@@ -173,6 +186,7 @@ function renderSingleBeeswarm(config, data, parent, tooltip) {
         .attr('y1', (value) => rowScale(value))
         .attr('y2', (value) => rowScale(value))
         .attr('stroke', gridColor)
+        .attr('stroke-opacity', 0.45)
         .attr('stroke-dasharray', '4 4');
 
     chartGroup.append('g')
@@ -185,19 +199,11 @@ function renderSingleBeeswarm(config, data, parent, tooltip) {
     chartGroup.append('text')
         .attr('class', 'bubble-axis-label')
         .attr('x', innerWidth / 2)
-        .attr('y', innerHeight + 42)
+        .attr('y', innerHeight + 52)
         .attr('text-anchor', 'middle')
         .text(config.axisLabel);
 
     const bandOverlay = chartGroup.append('g').attr('class', 'beeswarm-band-overlay');
-    bandOverlay.append('rect')
-        .attr('class', 'beeswarm-active-band')
-        .attr('y', 0)
-        .attr('height', innerHeight)
-        .attr('fill', bandColor)
-        .attr('opacity', 0)
-        .attr('pointer-events', 'none');
-
     const activeGuide = bandOverlay.append('line')
         .attr('class', 'beeswarm-guide-line')
         .attr('y1', 0)
@@ -235,7 +241,7 @@ function renderSingleBeeswarm(config, data, parent, tooltip) {
                 lines: [
                     `${config.tooltipLabel} : ${config.formatter(datum.value)}`,
                     `Impact négatif : ${yesCount} / ${totalCount} (${formatNumber(yesShare, 1)} %)`,
-                    `Pas d'impact négatif : ${noCount} / ${totalCount} (${formatNumber(noShare, 1)} %)`
+                    `Pas d’impact négatif : ${noCount} / ${totalCount} (${formatNumber(noShare, 1)} %)`
                 ]
             });
         })

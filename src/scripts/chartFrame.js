@@ -1,7 +1,7 @@
 export function createChartModule(container, options) {
     const {
         title,
-        moduleTag,
+        moduleTag = '',
         topContent = '',
         chartMarkup,
         note = ''
@@ -11,7 +11,7 @@ export function createChartModule(container, options) {
         <div class="chart-module">
             <div class="module-heading">
                 <h3>${title}</h3>
-                <span class="module-tag">${moduleTag}</span>
+                ${moduleTag ? `<span class="module-tag">${moduleTag}</span>` : ''}
             </div>
             ${topContent}
             ${chartMarkup}

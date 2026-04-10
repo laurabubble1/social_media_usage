@@ -210,6 +210,21 @@ section p {
     width: 100%;
 }
 
+.section-chart-stack {
+    display: grid;
+    gap: 24px;
+}
+
+.chart-container-stack {
+    display: grid;
+    gap: 28px;
+    align-items: stretch;
+}
+
+.stack-panel {
+    width: 100%;
+}
+
 .chart-module {
     width: 100%;
     display: grid;

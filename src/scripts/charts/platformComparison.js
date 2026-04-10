@@ -34,7 +34,7 @@ const METRICS = [
         title: 'Impact académique négatif',
         accessor: (student) => (student.affects_academic_performance ? 100 : 0),
         valueLabel: (value) => `${formatNumber(value, 1)} %`,
-        tooltipLabel: 'Pourcentage d\'impact négatif'
+        tooltipLabel: 'Pourcentage d’impact négatif'
     }
 ];
 
@@ -60,10 +60,9 @@ function summarizeByPlatform(data) {
 
 function renderModuleShell(container) {
     const shell = createChartModule(container, {
-        title: 'Comparaison multi-critères par plateforme',
-        moduleTag: 'Module platformComparison',
+        title: 'Profil des plateformes',
         chartMarkup: '<div class="overview-multiples"></div>',
-        note: 'Survolez une barre pour afficher la valeur brute moyenne et mettre en avant la même plateforme dans les quatre graphiques.'
+        note: 'Survolez une barre pour afficher la valeur moyenne et retrouver la même plateforme dans les quatre vues.'
     });
 
     return {
