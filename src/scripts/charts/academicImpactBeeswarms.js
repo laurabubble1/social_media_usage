@@ -1,5 +1,5 @@
 import { clearContainer, createSVG, formatNumber, getCssVariable } from '../utils.js';
-import { hideTooltip, moveTooltip, showTooltip } from '../chartTooltip.js';
+import { createTooltip, showTooltip, moveTooltip, hideTooltip } from '../chartTooltip.js';
 import { createChartModule } from '../chartFrame.js';
 import { createBands } from '../bandHelpers.js';
 
@@ -82,13 +82,11 @@ function renderModuleShell(container) {
             </div>
         `,
         chartMarkup: '<div class="beeswarm-grid"></div>',
-        includeTooltip: true,
         note: 'Chaque bille représente un étudiant. La bande verticale au survol résume les réponses Oui et Non pour une même valeur d\'heures.'
     });
 
     return {
-        chartsHost: shell.root.querySelector('.beeswarm-grid'),
-        tooltip: shell.tooltip
+        chartsHost: shell.root.querySelector('.beeswarm-grid')
     };
 }
 
@@ -193,7 +191,7 @@ function renderSingleBeeswarm(config, data, parent, tooltip) {
         .attr('width', (datum) => datum.width)
         .attr('height', innerHeight)
         .attr('fill', 'transparent')
-        .on('mouseenter', function handleBandEnter(event, datum) {
+        .on('mouseenter', function (event, datum) {
             const summary = summaries.find((item) => item.value === datum.value);
 
             activeBand
@@ -214,10 +212,10 @@ function renderSingleBeeswarm(config, data, parent, tooltip) {
                 ]
             });
         })
-        .on('mousemove', function handleBandMove(event) {
+        .on('mousemove', function (event) {
             moveTooltip(tooltip, event);
         })
-        .on('mouseleave', function handleBandLeave() {
+        .on('mouseleave', function () {
             activeBand.attr('opacity', 0);
             chartGroup.selectAll('.beeswarm-dot')
                 .classed('is-dimmed', false)
@@ -241,7 +239,8 @@ function renderSingleBeeswarm(config, data, parent, tooltip) {
 
 export function renderAcademicImpactBeeswarms(data, container) {
     clearContainer(container);
-    const { chartsHost, tooltip } = renderModuleShell(container);
+    const { chartsHost } = renderModuleShell(container);
+    const tooltip = createTooltip(chartsHost);
 
     SWARM_CONFIGS.forEach((config) => {
         renderSingleBeeswarm(config, data, chartsHost, tooltip);

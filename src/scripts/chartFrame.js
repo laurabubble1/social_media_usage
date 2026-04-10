@@ -4,8 +4,7 @@ export function createChartModule(container, options) {
         moduleTag,
         topContent = '',
         chartMarkup,
-        note = '',
-        includeTooltip = false
+        note = ''
     } = options;
 
     container.innerHTML = `
@@ -16,13 +15,11 @@ export function createChartModule(container, options) {
             </div>
             ${topContent}
             ${chartMarkup}
-            ${includeTooltip ? '<div class="chart-tooltip is-hidden"></div>' : ''}
             ${note ? `<p class="module-note">${note}</p>` : ''}
         </div>
     `;
 
     return {
-        root: container.querySelector('.chart-module'),
-        tooltip: container.querySelector('.chart-tooltip')
+        root: container.querySelector('.chart-module')
     };
 }

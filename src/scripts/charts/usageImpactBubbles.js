@@ -1,5 +1,5 @@
 import { clearContainer, createSVG, formatNumber, getCssVariable } from '../utils.js';
-import { hideTooltip, moveTooltip, showTooltip } from '../chartTooltip.js';
+import { createTooltip, showTooltip, moveTooltip, hideTooltip } from '../chartTooltip.js';
 import { createChartModule } from '../chartFrame.js';
 
 const SERIES = [
@@ -65,13 +65,11 @@ function renderModuleShell(container) {
         moduleTag: 'Module usageImpactBubbles',
         topContent: legendMarkup,
         chartMarkup: '<div class="bubble-chart"></div>',
-        includeTooltip: true,
         note: 'Chaque bulle représente un groupe d\'étudiants partageant le même nombre d\'heures d\'utilisation. La taille indique combien d\'étudiants appartiennent à ce groupe.'
     });
 
     return {
-        chartContainer: shell.root.querySelector('.bubble-chart'),
-        tooltip: shell.tooltip
+        chartContainer: shell.root.querySelector('.bubble-chart')
     };
 }
 
@@ -101,7 +99,8 @@ export function renderUsageImpactBubbles(data, container) {
         : countExtent;
 
     clearContainer(container);
-    const { chartContainer, tooltip } = renderModuleShell(container);
+    const { chartContainer } = renderModuleShell(container);
+    const tooltip = createTooltip(chartContainer);
 
     const axisColor = getCssVariable('--color-text-secondary');
     const gridColor = getCssVariable('--color-border');
@@ -181,7 +180,7 @@ export function renderUsageImpactBubbles(data, container) {
         .attr('r', (datum) => radiusScale(datum.count))
         .attr('fill', (datum) => datum.seriesKey === 'mental_health_score' ? mentalColor : sleepColor)
         .attr('opacity', 0.7)
-        .on('mouseenter', function handleMouseEnter(event, datum) {
+        .on('mouseenter', function (event, datum) {
             d3.select(this).classed('is-hovered', true);
             showTooltip(tooltip, event, {
                 title: datum.seriesLabel,
@@ -192,10 +191,10 @@ export function renderUsageImpactBubbles(data, container) {
                 ]
             });
         })
-        .on('mousemove', function handleMouseMove(event, datum) {
+        .on('mousemove', (event) => {
             moveTooltip(tooltip, event);
         })
-        .on('mouseleave', function handleMouseLeave() {
+        .on('mouseleave', function () {
             d3.select(this).classed('is-hovered', false);
             hideTooltip(tooltip);
         });

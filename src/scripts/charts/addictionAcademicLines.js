@@ -1,6 +1,6 @@
 import { clearContainer, createSVG, formatNumber, getCssVariable } from '../utils.js';
 import { createChartModule } from '../chartFrame.js';
-import { hideTooltip, moveTooltip, showTooltip } from '../chartTooltip.js';
+import { createTooltip, showTooltip, moveTooltip, hideTooltip } from '../chartTooltip.js';
 import { createScoreBands } from '../bandHelpers.js';
 
 const VIEW_MODES = {
@@ -78,7 +78,6 @@ function renderModuleShell(container) {
             </div>
         `,
         chartMarkup: '<div class="diverging-chart"></div>',
-        includeTooltip: true,
         note: 'Le toggle permet de basculer entre le nombre d\'étudiants et la proportion d\'impact négatif pour chaque score d\'addiction.'
     });
 }
@@ -96,9 +95,10 @@ function buildOverlayBands(scores, xScale, innerWidth) {
     return createScoreBands(scores, xScale, innerWidth);
 }
 
-function renderChart(container, tooltip, distribution, mode) {
+function renderChart(container, distribution, mode) {
     const chartContainer = container.querySelector('.diverging-chart');
     chartContainer.innerHTML = '';
+    const tooltip = createTooltip(chartContainer);
 
     const axisColor = getCssVariable('--color-text-secondary');
     const gridColor = getCssVariable('--color-border');
@@ -254,9 +254,7 @@ function renderChart(container, tooltip, distribution, mode) {
         .attr('width', (item) => item.width)
         .attr('height', innerHeight)
         .attr('fill', 'transparent')
-        .on('mouseenter', function handleEnter(event, band) {
-            const datum = distribution.find((item) => item.score === band.score);
-
+        .on('mouseenter', function (event, band) {
             activeBand.attr('x', band.x).attr('width', band.width).attr('opacity', 1);
             activeGuide
                 .attr('x1', xScale(band.score))
@@ -267,6 +265,7 @@ function renderChart(container, tooltip, distribution, mode) {
                 .classed('is-dimmed', (point) => point.score !== band.score)
                 .classed('is-highlighted', (point) => point.score === band.score);
 
+            const datum = distribution.find((item) => item.score === band.score);
             showTooltip(tooltip, event, {
                 title: `Score d addiction : ${band.score}`,
                 lines: [
@@ -276,10 +275,10 @@ function renderChart(container, tooltip, distribution, mode) {
                 ]
             });
         })
-        .on('mousemove', function handleMove(event) {
+        .on('mousemove', (event) => {
             moveTooltip(tooltip, event);
         })
-        .on('mouseleave', function handleLeave() {
+        .on('mouseleave', function () {
             activeBand.attr('opacity', 0);
             activeGuide.attr('opacity', 0);
             chartGroup.selectAll('.diverging-point')
@@ -305,7 +304,7 @@ export function renderAddictionAcademicLines(data, container) {
         toggleButtons.forEach((button) => {
             button.classList.toggle('is-active', button.dataset.mode === nextMode);
         });
-        renderChart(shell.root, shell.tooltip, distribution, nextMode);
+        renderChart(shell.root, distribution, nextMode);
     }
 
     toggleButtons.forEach((button) => {

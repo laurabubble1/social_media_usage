@@ -4,7 +4,7 @@ import {
     formatNumber,
     getCssVariable
 } from '../utils.js';
-import { hideTooltip, moveTooltip, showTooltip } from '../chartTooltip.js';
+import { createTooltip, showTooltip, moveTooltip, hideTooltip } from '../chartTooltip.js';
 import { createChartModule } from '../chartFrame.js';
 
 const METRICS = [
@@ -63,13 +63,11 @@ function renderModuleShell(container) {
         title: 'Comparaison multi-critères par plateforme',
         moduleTag: 'Module platformComparison',
         chartMarkup: '<div class="overview-multiples"></div>',
-        includeTooltip: true,
         note: 'Survolez une barre pour afficher la valeur brute moyenne et mettre en avant la même plateforme dans les quatre graphiques.'
     });
 
     return {
-        chartsHost: shell.root.querySelector('.overview-multiples'),
-        tooltip: shell.tooltip
+        chartsHost: shell.root.querySelector('.overview-multiples')
     };
 }
 
@@ -161,7 +159,7 @@ function renderSmallChart(metric, platformData, parent, tooltip) {
         .attr('height', yScale.bandwidth())
         .attr('rx', 10)
         .attr('fill', barColor)
-        .on('mouseenter', function handleMouseEnter(event, datum) {
+        .on('mouseenter', function (event, datum) {
             updateHighlight(datum.platform);
             showTooltip(tooltip, event, {
                 title: datum.platform,
@@ -169,8 +167,7 @@ function renderSmallChart(metric, platformData, parent, tooltip) {
             });
             d3.select(this).raise();
         })
-        .on('mousemove', function handleMouseMove(event, datum) {
-            updateHighlight(datum.platform);
+        .on('mousemove', (event) => {
             moveTooltip(tooltip, event);
         })
         .on('mouseleave', () => {
@@ -198,8 +195,9 @@ export function renderPlatformComparison(data, container) {
 
     clearContainer(container);
     const shell = renderModuleShell(container);
+    const tooltip = createTooltip(shell.chartsHost);
 
     METRICS.forEach((metric) => {
-        renderSmallChart(metric, platformData, shell.chartsHost, shell.tooltip);
+        renderSmallChart(metric, platformData, shell.chartsHost, tooltip);
     });
 }
