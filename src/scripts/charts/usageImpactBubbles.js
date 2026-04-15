@@ -70,7 +70,7 @@ function renderModuleShell(container) {
         title: 'Sommeil et santé mentale selon l’utilisation',
         topContent: legendMarkup,
         chartMarkup: '<div class="bubble-chart"></div>',
-        note: 'Chaque bulle représente un groupe d’étudiants partageant le même temps d’utilisation. La taille indique combien d’étudiants appartiennent à ce groupe.'
+        note: 'Chaque bulle représente un groupe d’étudiants partageant le même temps d’utilisation. La taille indique le nombre d’étudiants appartenant à ce groupe.'
     });
 
     return {

@@ -115,7 +115,7 @@ function initializeChart(chartContainer) {
     const tooltip = createTooltip(chartContainer);
 
     const { svg, chartGroup, innerWidth, innerHeight } = createSVG(chartContainer, {
-        height: 420,
+        height: 400,
         margin: { top: 24, right: 20, bottom: 56, left: 78 }
     });
 
@@ -215,6 +215,9 @@ function updateOverlay(state, distribution, mode, xScale) {
 
             showTooltip(state.tooltip, event, {
                 title: buildImpactSummaryTitle(datum),
+                titleColor: !datum || !datum.totalCount || datum.yesPercentage === datum.noPercentage
+                    ? null
+                    : (datum.yesPercentage > datum.noPercentage ? state.positiveColor : state.negativeColor),
                 lines: [
                     `Score d’addiction : ${band.score}`,
                     `Impact négatif : ${datum?.yesCount || 0} / ${datum?.totalCount || 0} (${formatNumber(datum?.yesPercentage || 0, 1)} %)`,
@@ -369,6 +372,7 @@ export function renderAddictionAcademicLines(data, container) {
     const shell = renderModuleShell(container);
     const distribution = buildScoreDistribution(data);
     const chartContainer = shell.root.querySelector('.diverging-chart');
+    const toggleGroup = shell.root.querySelector('.toggle-group');
     const toggleButtons = Array.from(shell.root.querySelectorAll('.toggle-button'));
     const state = initializeChart(chartContainer);
 
@@ -376,6 +380,8 @@ export function renderAddictionAcademicLines(data, container) {
 
     function applyMode(nextMode, animate = true) {
         currentMode = nextMode;
+        const activeIndex = Math.max(0, toggleButtons.findIndex((button) => button.dataset.mode === nextMode));
+        toggleGroup?.style.setProperty('--toggle-index', activeIndex);
         toggleButtons.forEach((button) => {
             button.classList.toggle('is-active', button.dataset.mode === nextMode);
         });

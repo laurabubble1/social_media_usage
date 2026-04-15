@@ -13,28 +13,28 @@ const METRICS = [
         title: 'Sommeil moyen',
         accessor: (student) => student.sleep_hours_per_night,
         valueLabel: (value) => `${formatNumber(value, 2)} h`,
-        tooltipLabel: 'Heures de sommeil moyennes'
+        tooltipLabel: 'Heures de sommeil moyennes: '
     },
     {
         key: 'mental_health',
         title: 'Santé mentale moyenne',
         accessor: (student) => student.mental_health_score,
         valueLabel: (value) => formatNumber(value, 2),
-        tooltipLabel: 'Score de santé mentale moyen'
+        tooltipLabel: 'Score de santé mentale moyen: '
     },
     {
         key: 'conflicts',
         title: 'Conflits moyens',
         accessor: (student) => student.conflicts_over_social_media,
         valueLabel: (value) => formatNumber(value, 2),
-        tooltipLabel: 'Nombre moyen de conflits'
+        tooltipLabel: 'Nombre moyen de conflits: '
     },
     {
         key: 'academic_impact',
         title: 'Impact académique négatif',
         accessor: (student) => (student.affects_academic_performance ? 100 : 0),
         valueLabel: (value) => `${formatNumber(value, 1)} %`,
-        tooltipLabel: 'Pourcentage d’impact négatif'
+        tooltipLabel: 'Pourcentage d’impact négatif: '
     }
 ];
 
@@ -62,7 +62,7 @@ function renderModuleShell(container) {
     const shell = createChartModule(container, {
         title: 'Profil des plateformes',
         chartMarkup: '<div class="overview-multiples"></div>',
-        note: 'Survolez une barre pour afficher la valeur moyenne et retrouver la même plateforme dans les quatre vues.'
+        note: 'Le survole d\'une barre affiche la valeur moyenne et met en évidence la même plateforme dans les quatre vues.'
     });
 
     return {
@@ -162,7 +162,7 @@ function renderSmallChart(metric, platformData, parent, tooltip) {
             updateHighlight(datum.platform);
             showTooltip(tooltip, event, {
                 title: datum.platform,
-                lines: [metric.tooltipLabel, metric.valueLabel(datum[metric.key])]
+                lines: [`${metric.tooltipLabel} : ${metric.valueLabel(datum[metric.key])}`]
             });
             d3.select(this).raise();
         })

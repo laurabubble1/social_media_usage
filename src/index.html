@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Usage des médias sociaux et bien-être étudiant</title>
+    <title>Impact des médias sociaux</title>
     <link rel="stylesheet" href="assets/styles/main.css">
 </head>
 <body>
     <nav>
-        <h1>Usage des médias sociaux et bien-être étudiant</h1>
+        <h1>Les médias sociaux</h1>
         <ul id="nav-menu">
             <li><a href="#intro" class="nav-link active">Accueil</a></li>
             <li><a href="#section1" class="nav-link">Les plateformes</a></li>
@@ -22,36 +22,63 @@
         <div class="content">
             <div id="intro" class="intro-section story-step is-visible">
                 <div>
-                    <h1>Usage des médias sociaux et bien-être étudiant</h1>
+                    <h1>Impact des médias sociaux sur le bien-être des étudiant</h1>
                     <p id="loading" class="loading">Chargement des données...</p>
-                    <p class="intro-description">Quatre sections simples pour lire les principaux écarts.</p>
+                    <p class="intro-description">Nous allons explorer l'impact des médias sociaux sur le bien-être des étudiants à travers plusieurs dimensions.
+                        Notre analyse se concentre sur les impacts liés au temps d'utilisation, au conflit interpersonnel et à l'impact académique.</p>
                 </div>
             </div>
 
             <section id="section1" class="story-step">
                 <h2>Les plateformes</h2>
-                <p>On analyse l'impact des plateformes sur les autres données du jeu, comme le sommeil, la santé mentale, les conflits et la part d'effet académique négatif. Cette lecture permet de voir quels environnements se démarquent le plus.</p>
+                <p>Avant de débuter, nous allons explorer un peu plus en profondeur les plateformes les plus utiliser que les jeunes ont répondu comme étant le plus utiliser afin de mieux comprendre quels réseaux sociaux ont un impact plus important.
+                    Nous analysons ici l'impact des plateformes sur les sujets que nous allons étudier plus en détail ultérieurement. 
+                    Ces éléments en question sont le sommeil, la santé mentale, les conflits et la part d'effet académique négatif causé par les médias sociaux.
+                    Cette lecture permet de voir quels environnements se démarquent le plus. Pour le someil et la santé mental, un score plus élevé est mieux tant dis que pour les conflits et l'impact académique, un score plus faible est préféré. 
+                    Instagram surprend les attentes de plusieurs en se retrouve bien plus au centre du lot alors que celle ci est souvent comparée à TikTok qui tourne autour des plateformes les plus négatives. 
+                    Enfin Whatsapp est la plateforme qui se démarque le plus en étant une plateforme qui a un impact particulièrement négative en étant 1ere ou 2e dans les 4 catégories, ce qui suggère qu'elle serait à surveiller de près même si ce n'est qu'une plateforme de messagerie.
+                    En effet, bien qu'elle soit la plus utilisée au courant de la journée, ceci ne signifie pas que c'est la plateforme qui cause les impacts négatifs, mais que les gens qui utilisent whatsapp sont plus susceptibles d'avoir des impacts négatifs,
+                    ce qui suggère que l'utilisation de whatsapp pourrait être un indicateur ou un facteur qui contribue à ces impacts négatifs.
+                </p>
                 <div class="chart-container" id="viz1"></div>
             </section>
 
             <section id="section2" class="story-step">
                 <h2>Le temps d'utilisation</h2>
-                <p>On analyse l'impact du temps d'utilisation par rapport aux autres mesures de bien-être étudiant. Le sommeil et la santé mentale sont lus ensemble pour voir comment les deux évoluent quand l'exposition augmente.</p>
+                <p>Maintenant que nous avons une bonne idée générale des plateformes à faire attention, nous allons débuter avec les impacts en lien au temps d'utilisation.
+                    Celui-ci sera observer avec la santé mentale ainsi que le ne nombre d'heures de sommeil ce qui nous permetteras de voir comment les deux évoluent quand l'exposition augmente.
+                    La santé mentale est un score de 1 à 10 tant dit que le temps d'utilisation et le sommeil représentent un temps en heure.
+                    Le sommeil et la santé mentale sont lu ensemble mais ne sont pas normalizer puisque leur valeur sont déjà très semblables tel qu'observer ci dessous avec des valeur initiales assé simialire.
+                    Nous pouvons voir que les deux descendent à un rythme assez similaire, cependant la santé mentale commence à descendre à un rythme constant après 2.7 heures d'utilisation tandis que le sommeil lui, commence à descendre plus rapidement après 3.4 heures d'utilisation.
+                    </p>
                 <div class="chart-container" id="viz2"></div>
             </section>
 
             <section id="section3" class="story-step">
                 <h2>Les conflits</h2>
-                <p>On analyse l'impact des conflits en les replaçant par rapport au temps d'utilisation et au niveau d'addiction. La carte met rapidement en évidence les combinaisons les plus associées aux situations plus tendues.</p>
+                <p>Nous allon désormais analyser la provenance des conflits interpersonnels sur les médias sociaux. 
+                    Ici, nous observons le nombre de conflits que les étudiants peuvent rencontrer sur les média sociaux en fonction de leur temps d'utilisation et au niveau d'addiction. 
+                    La carte met rapidement en évidence les combinaisons d'addiction et de temps passé sur les plateformes qui cause le plus de tensions sur les plateformes en ligne.
+                    Nous observons ci-dessous qu'un nombre plus élevé de conflits est presque directement associé à un score d'addiction plus élevé alors que le l'augmentation des conflit avec le temps d'utilisation est moins directement proportionnelle, bien que présente.
+                    Il est à noter que évidemment plus le temps d'utilisation est élevé, plus l'opportunité de vivre des conflits est élevée, cependant, il est intéressant de voir que le score d'addiction semble être un facteur plus déterminant que le temps d'utilisation pour prédire le nombre de conflits vécus.
+                    À noté que les cases bleu représentent les combinaisons d'addiction et de temps d'utilisation qui sont absentes dans les données, alors que les cases gris pale représente une combinaison sans conflit, vous pouver l'observer en le survolant avec votre souris.
+                </p>
                 <div class="chart-container" id="viz3"></div>
             </section>
 
             <section id="section4" class="story-step">
                 <h2>L'impact académique</h2>
-                <p>On analyse l'impact académique par rapport aux autres données données, soit l'utilisation, le sommeil et le score d'addiction.</p>
-                <div class="chart-container chart-container-stack">
-                    <div class="stack-panel" id="viz4"></div>
-                    <div class="stack-panel" id="viz5"></div>
+                <p>Finalement, nous allons analyser l'impact académique des médias sociaux en par rapport à l'utilisation, au sommeil et au score d'addiction. Nous avons diviser en 3 graphiques de 2 types différents. 
+                    Pour les donné temporelles, nous utilisons un beeswarm pour lequel chaque point rouge représente un étudiant qui a déclaré que les plateformes avaient un impact négatif sur leur performance académique et les points verts l'inverse.
+                    Le beeswarm suit une ligne temporelle incrémentale, ce qui nous permet de voir après combien d'heures d'utilisation ou de sommeil les impact académique négatif deviennent plus importants.
+                    Nous pouvons voir que les la proportion de points rouge explose après 5 heures d'utilisation et à moins de 7 heures de sommeil, ce qui suggère que ces seuils pourraient être des points de bascule pour l'impact académique négatif.
+                    Pour ce qui est du score d'addiction, comme c'est une donné discrète, nous l'avons représenté par un utilisé un double graph linéaire. 
+                    Ce graphique est d'ailleurs bien plus marquand car en mode pourcentage, nous voyons que 6 est le point de pivot avec 5 et 7 ayant chacun 100% d'impact positif et négatif respectivement.
+                    L'addiction semble être un facteur très déterminant pour l'impact académique négatif, ce qui suggère que les étudiants qui se sentent plus dépendants des médias sociaux sont plus susceptibles de ressentir un impact négatif sur leurs performances académiques.
+                </p>
+                <div class="chart-container chart-container-stack chart-container-academic">
+                    <div class="stack-panel stack-panel-beeswarm" id="viz4"></div>
+                    <div class="stack-panel stack-panel-diverging" id="viz5"></div>
                 </div>
             </section>
         </div>

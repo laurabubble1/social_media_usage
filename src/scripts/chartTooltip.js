@@ -44,9 +44,10 @@ export function hideTooltip(tooltip) {
 
 export function formatTooltipContent(content) {
     const lines = (content.lines || []).map((line) => `<span>${line}</span>`).join('');
+    const titleStyle = content.titleColor ? ` style="color: ${content.titleColor};"` : '';
 
     return `
-        <strong>${content.title}</strong>
+        <strong${titleStyle}>${content.title}</strong>
         ${lines}
     `;
 }

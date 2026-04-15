@@ -84,7 +84,7 @@ export function renderAddictionUsageHeatmap(data, container) {
 
     const colorScale = d3.scaleSequential()
         .domain([0, d3.max(conflictValues) || 1])
-        .interpolator(d3.interpolateYlOrRd);
+        .interpolator(d3.interpolateHsl('hsl(0, 20%, 95%)', 'hsl(0, 90%, 42%)'));
 
     chartGroup.append('g')
         .attr('transform', `translate(0,${innerHeight})`)

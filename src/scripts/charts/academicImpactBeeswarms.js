@@ -109,7 +109,7 @@ function renderModuleShell(container) {
             </div>
         `,
         chartMarkup: '<div class="beeswarm-grid"></div>',
-        note: 'Le survol résume la répartition des réponses pour une même valeur d’utilisation ou de sommeil.'
+        note: 'Le survol résume la répartition des réponses pour une même valeur d’utilisation ou de sommeil. La couleur de son titre indique si l’impact négatif est majoritaire ou non pour cette valeur.'
     });
 
     return {
@@ -230,6 +230,9 @@ function renderSingleBeeswarm(config, data, parent, tooltip) {
             const totalCount = summary?.totalCount || 0;
             const yesShare = totalCount ? (yesCount / totalCount) * 100 : 0;
             const noShare = totalCount ? (noCount / totalCount) * 100 : 0;
+            const titleColor = yesCount === noCount
+                ? null
+                : (yesCount > noCount ? negativeColor : positiveColor);
 
             activeGuide
                 .attr('x1', xScale(datum.value))
@@ -238,6 +241,7 @@ function renderSingleBeeswarm(config, data, parent, tooltip) {
 
             showTooltip(tooltip, event, {
                 title: buildImpactSummaryTitle(yesCount, noCount, totalCount),
+                titleColor,
                 lines: [
                     `${config.tooltipLabel} : ${config.formatter(datum.value)}`,
                     `Impact négatif : ${yesCount} / ${totalCount} (${formatNumber(yesShare, 1)} %)`,
