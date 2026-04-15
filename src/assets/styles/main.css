@@ -303,6 +303,19 @@ section p {
     color: var(--color-text-primary);
     box-shadow: 0 10px 24px var(--color-shadow-soft);
     pointer-events: none;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 80ms ease;
+}
+
+.chart-tooltip.is-fading-out {
+    opacity: 0;
+}
+
+.chart-tooltip.is-hidden {
+    display: grid;
+    opacity: 0;
+    visibility: hidden;
 }
 
 .chart-tooltip strong {
