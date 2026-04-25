@@ -31,20 +31,14 @@ function renderVisualizations(data) {
 
 async function initializeApp() {
     try {
-        console.log('Demarrage de l\'application...');
-
         initializeNavigation();
         initializeScrollReveal();
 
         const data = await loadStudentData();
 
-        console.log(data);
-        console.table(data.slice(0, 5));
-
         hideLoading();
         renderVisualizations(data);
 
-        console.log('Application initialisee.');
         return data;
     } catch (error) {
         hideLoading();
