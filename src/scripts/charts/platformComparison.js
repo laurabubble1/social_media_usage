@@ -6,6 +6,8 @@ import {
 } from '../utils.js';
 import { createTooltip, showTooltip, moveTooltip, hideTooltip } from '../chartTooltip.js';
 import { createChartModule } from '../chartFrame.js';
+import { makeBarChartKeyboardAccessible } from '../keyboardChartInteraction.js';
+import { makeBarKeyboardAccessible, createDataFormatter } from '../chartAccessibilityHelper.js';
 
 const METRICS = [
     {
@@ -152,6 +154,11 @@ function renderSmallChart(metric, platformData, parent, tooltip) {
         .append('rect')
         .attr('class', 'platform-bar')
         .attr('data-platform', (datum) => datum.platform)
+        .attr('data-keyboard-index', (d, i) => i)
+        .attr('data-tooltip-title', (datum) => datum.platform)
+        .attr('data-tooltip-lines', (datum) => `${metric.tooltipLabel} ${metric.valueLabel(datum[metric.key])}`)
+        .attr('data-tooltip-content', (datum) => `${datum.platform}: ${metric.valueLabel(datum[metric.key])}`)
+        .attr('data-keyboard-announcement', (datum) => `${datum.platform}: ${metric.title} ${datum[metric.key].toFixed(2)}`)
         .attr('x', 0)
         .attr('y', (datum) => yScale(datum.platform))
         .attr('width', (datum) => xScale(datum[metric.key]))
@@ -187,6 +194,16 @@ function renderSmallChart(metric, platformData, parent, tooltip) {
         .attr('font-size', 11)
         .attr('font-weight', 700)
         .text((datum) => metric.valueLabel(datum[metric.key]));
+
+    // Ajouter l'interaction clavier pour les barres
+    setTimeout(() => {
+        makeBarChartKeyboardAccessible(chartCanvas, {
+            onDataSelect: (bar) => {
+                const data = bar.getAttribute('data-tooltip-content');
+                console.log('Bar selected:', data);
+            }
+        });
+    }, 0);
 }
 
 export function renderPlatformComparison(data, container) {

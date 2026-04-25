@@ -1,6 +1,7 @@
 import { clearContainer, createSVG, formatNumber, getCssVariable } from '../utils.js';
 import { createTooltip, showTooltip, moveTooltip, hideTooltip } from '../chartTooltip.js';
 import { createChartModule } from '../chartFrame.js';
+import { makeHeatmapKeyboardAccessible } from '../keyboardChartInteraction.js';
 
 function buildHeatmapData(data) {
     const grouped = d3.rollup(
@@ -117,6 +118,18 @@ export function renderAddictionUsageHeatmap(data, container) {
         .enter()
         .append('rect')
         .attr('class', 'heatmap-cell')
+        .attr('data-keyboard-cell', true)
+        .attr('data-keyboard-index', (d, i) => i)
+        .attr('data-keyboard-rows', addictionScores.length)
+        .attr('data-keyboard-cols', usageHours.length)
+        .attr('data-tooltip-title', (datum) => `Conflits moyens : ${formatNumber(datum.averageConflicts || 0, 2)}`)
+        .attr('data-tooltip-lines', (datum) => [
+            `Score d’addiction : ${datum.score}`,
+            `Heures par jour : ${datum.hour}`,
+            `Étudiants représentés : ${datum.count}`
+        ].join('||'))
+        .attr('data-tooltip-content', (datum) => datum.averageConflicts !== null ? `Conflits: ${formatNumber(datum.averageConflicts, 2)}` : 'Données non disponibles')
+        .attr('data-keyboard-announcement', (datum) => `Score addiction ${datum.score}, ${datum.hour} heures: ${datum.averageConflicts !== null ? `${formatNumber(datum.averageConflicts, 2)} conflits` : 'données non disponibles'}`)
         .attr('x', (datum) => xScale(datum.hour))
         .attr('y', (datum) => yScale(datum.score))
         .attr('width', xScale.bandwidth())
@@ -143,4 +156,16 @@ export function renderAddictionUsageHeatmap(data, container) {
             d3.select(this).classed('is-hovered', false);
             hideTooltip(tooltip);
         });
+
+    // Ajouter l'interaction clavier pour les cellules
+    setTimeout(() => {
+        makeHeatmapKeyboardAccessible(chartContainer, {
+            onDataSelect: (cell) => {
+                const data = cell.getAttribute('data-tooltip-content');
+                console.log('Cell selected:', data);
+            },
+            rows: addictionScores.length,
+            cols: usageHours.length
+        });
+    }, 0);
 }

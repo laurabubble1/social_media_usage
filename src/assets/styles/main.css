@@ -8,8 +8,8 @@
     --color-text-primary: #333333;
     --color-text-secondary: #666666;
     --color-text-light: #ffffff;
-    --color-text-light-muted: rgba(255, 255, 255, 0.8);
-    --color-text-light-soft: rgba(255, 255, 255, 0.7);
+    --color-text-light-muted: #e0e0e0;
+    --color-text-light-soft: #cccccc;
 
     --color-accent-start: #667eea;
     --color-accent-end: #764ba2;
@@ -21,8 +21,8 @@
     --color-beeswarm-positive: #2a9d4b;
     --color-beeswarm-negative: #d64545;
     --color-beeswarm-band: rgba(102, 126, 234, 0.12);
-    --color-accent-overlay-soft: rgba(255, 255, 255, 0.1);
-    --color-accent-overlay-strong: rgba(255, 255, 255, 0.2);
+    --color-accent-overlay-soft: rgba(255, 255, 255, 0.15);
+    --color-accent-overlay-strong: rgba(255, 255, 255, 0.25);
 
     --color-shadow-strong: rgba(0, 0, 0, 0.15);
     --color-shadow-soft: rgba(0, 0, 0, 0.08);
@@ -99,6 +99,11 @@ nav a:hover {
     background-color: var(--color-accent-overlay-soft);
     color: var(--color-text-light);
     border-left-color: var(--color-text-light);
+}
+
+nav a:focus-visible {
+    outline: 2px solid var(--color-accent-highlight);
+    outline-offset: 2px;
 }
 
 nav a.active {
