@@ -2,6 +2,7 @@ function setActiveLink(navLinks, activeId) {
     navLinks.forEach((link) => {
         const isActive = link.getAttribute('href') === `#${activeId}`;
         link.classList.toggle('active', isActive);
+        link.setAttribute('aria-current', isActive ? 'page' : 'false');
     });
 }
 

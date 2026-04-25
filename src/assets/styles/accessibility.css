@@ -1,0 +1,420 @@
+/**
+ * Styles d'accessibilité
+ * Ce fichier contient tous les styles liés à l'accessibilité
+ */
+
+/* Panneau d'accessibilité */
+.a11y-panel {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    font-family: inherit;
+}
+
+.a11y-panel-toggle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--color-accent-start);
+    color: var(--color-text-light);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    font-size: 0;
+}
+
+.a11y-panel-toggle:hover,
+.a11y-panel-toggle:focus-visible {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.a11y-panel-toggle:focus-visible {
+    outline: 3px solid var(--color-accent-highlight);
+    outline-offset: 2px;
+}
+
+.a11y-panel-content {
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    padding: 20px;
+    width: 320px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.a11y-panel-content[hidden] {
+    display: none;
+}
+
+.a11y-panel-content h2 {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: var(--color-text-primary);
+    font-weight: 600;
+}
+
+.a11y-option-group {
+    margin-bottom: 20px;
+    border: none;
+    padding: 0;
+}
+
+.a11y-option-group legend {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.a11y-toggle-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: var(--color-text-primary);
+}
+
+.a11y-toggle-label input[type="checkbox"] {
+    margin-top: 2px;
+    cursor: pointer;
+    accent-color: var(--color-accent-start);
+}
+
+.a11y-description {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    margin: -8px 0 12px 24px;
+    line-height: 1.4;
+}
+
+.a11y-fontsize-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.a11y-fontsize-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.a11y-fontsize-btn:hover {
+    border-color: var(--color-accent-start);
+}
+
+.a11y-fontsize-btn:focus-visible {
+    outline: 2px solid var(--color-accent-start);
+    outline-offset: 2px;
+}
+
+.a11y-fontsize-btn.is-active {
+    background: var(--color-accent-start);
+    color: var(--color-text-light);
+    border-color: var(--color-accent-start);
+}
+
+/* Skip link */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--color-accent-start);
+    color: var(--color-text-light);
+    padding: 8px 16px;
+    text-decoration: none;
+    z-index: 10000;
+    font-weight: 600;
+    border-radius: 0 0 4px 0;
+}
+
+.skip-link:focus-visible {
+    top: 0;
+    outline: 3px solid var(--color-accent-highlight);
+}
+
+/* Indicateurs de focus améliorés */
+html.a11y-focus-indicator a:focus-visible,
+html.a11y-focus-indicator button:focus-visible,
+html.a11y-focus-indicator input:focus-visible,
+html.a11y-focus-indicator select:focus-visible,
+html.a11y-focus-indicator textarea:focus-visible {
+    outline: 3px solid var(--color-accent-highlight);
+    outline-offset: 2px;
+}
+
+/* Contraste élevé */
+html.a11y-high-contrast {
+    --color-text-light-muted: rgba(255, 255, 255, 1);
+    --color-text-light-soft: rgba(255, 255, 255, 1);
+    --color-text-secondary: #333333;
+    --color-border: #333333;
+    --color-accent-highlight: #000000;
+}
+
+html.a11y-high-contrast nav a {
+    color: var(--color-text-light);
+    border-left: 3px solid transparent;
+}
+
+html.a11y-high-contrast nav a.active {
+    border-left-color: #000000;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Réduire les animations */
+html.a11y-reduce-motion,
+html.a11y-reduce-motion * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+}
+
+/* Taille de police */
+html[data-a11y-fontsize="large"] {
+    font-size: 118%;
+}
+
+html[data-a11y-fontsize="large"] nav a {
+    font-size: 15px;
+}
+
+html[data-a11y-fontsize="large"] section h2 {
+    font-size: 36px;
+}
+
+html[data-a11y-fontsize="large"] section p {
+    font-size: 18px;
+}
+
+html[data-a11y-fontsize="extra-large"] {
+    font-size: 136%;
+}
+
+html[data-a11y-fontsize="extra-large"] nav a {
+    font-size: 16px;
+}
+
+html[data-a11y-fontsize="extra-large"] section h2 {
+    font-size: 40px;
+}
+
+html[data-a11y-fontsize="extra-large"] section p {
+    font-size: 20px;
+}
+
+/* Motifs graphiques pour les éléments colorés */
+html.a11y-patterns .bubble-point.mental_health_score {
+    fill: url(#a11y-pattern-mental) !important;
+    stroke: #124f9c;
+    stroke-width: 1.5px;
+}
+
+html.a11y-patterns .bubble-point.sleep_hours_per_night {
+    fill: url(#a11y-pattern-sleep) !important;
+    stroke: #b5641b;
+    stroke-width: 1.5px;
+}
+
+html.a11y-patterns .beeswarm-dot.negative,
+html.a11y-patterns .diverging-point.positive {
+    fill: url(#a11y-pattern-negative) !important;
+    stroke: #8f2323;
+    stroke-width: 1.2px;
+}
+
+html.a11y-patterns .beeswarm-dot.positive,
+html.a11y-patterns .diverging-point.negative {
+    fill: url(#a11y-pattern-positive) !important;
+    stroke: #1f6f35;
+    stroke-width: 1.2px;
+}
+
+html.a11y-patterns .bubble-legend-swatch.mental_health_score {
+    background-color: #1f6feb;
+    background-image: repeating-linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.9) 0,
+        rgba(255, 255, 255, 0.9) 3px,
+        transparent 3px,
+        transparent 6px
+    );
+}
+
+html.a11y-patterns .bubble-legend-swatch.sleep_hours_per_night {
+    background-color: #f28f3b;
+    background-image: repeating-linear-gradient(
+        -45deg,
+        rgba(255, 255, 255, 0.9) 0,
+        rgba(255, 255, 255, 0.9) 3px,
+        transparent 3px,
+        transparent 6px
+    );
+}
+
+html.a11y-patterns .beeswarm-legend-dot.negative {
+    background-color: #d64545;
+    background-image: repeating-linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.9) 0,
+        rgba(255, 255, 255, 0.9) 2px,
+        transparent 2px,
+        transparent 5px
+    );
+}
+
+html.a11y-patterns .beeswarm-legend-dot.positive {
+    background-color: #2a9d4b;
+    background-image: repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.9) 0,
+        rgba(255, 255, 255, 0.9) 2px,
+        transparent 2px,
+        transparent 5px
+    );
+}
+
+html.a11y-patterns .diverging-legend-line.positive,
+html.a11y-patterns .diverging-legend-line.negative {
+    height: 8px;
+    border-top: none;
+    background-size: 10px 10px;
+    background-repeat: repeat;
+}
+
+html.a11y-patterns .diverging-legend-line.positive {
+    background-color: #d64545;
+    background-image: repeating-linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.9) 0,
+        rgba(255, 255, 255, 0.9) 2px,
+        transparent 2px,
+        transparent 5px
+    );
+}
+
+html.a11y-patterns .diverging-legend-line.negative {
+    background-color: #2a9d4b;
+    background-image: repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.9) 0,
+        rgba(255, 255, 255, 0.9) 2px,
+        transparent 2px,
+        transparent 5px
+    );
+}
+
+/* Amélioration de la lisibilité des liens */
+a {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+}
+
+nav a {
+    text-decoration: none;
+}
+
+/* Indicateurs supplémentaires pour les éléments actifs */
+html.a11y-focus-indicator .nav-link.active::after {
+    margin-left: 8px;
+    font-weight: bold;
+}
+
+/* Focus visible par défaut */
+:focus-visible {
+    outline: 2px solid var(--color-accent-start);
+    outline-offset: 2px;
+}
+
+/* Réduction de l'opacité au survol en cas de réduction de mouvement */
+html.a11y-reduce-motion .story-step.is-visible {
+    opacity: 1;
+}
+
+html.a11y-reduce-motion .story-step {
+    opacity: 0.2;
+}
+
+/* Accessibilité des SVG */
+svg[role="img"] {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Interaction clavier pour les graphiques */
+
+/* Éléments du graphique focusables au clavier */
+[data-keyboard-index] {
+    cursor: pointer;
+    outline: none;
+}
+
+[data-keyboard-index]:focus-visible {
+    filter: brightness(1.15);
+    outline: 2px solid var(--color-accent-highlight);
+    outline-offset: 2px;
+}
+
+[data-keyboard-index].is-keyboard-focused {
+    filter: brightness(1.15) !important;
+    stroke: var(--color-accent-highlight) !important;
+    stroke-width: 2px !important;
+}
+
+/* SVG elements keyboard navigation */
+svg [data-keyboard-index]:focus-visible {
+    stroke: var(--color-accent-highlight) !important;
+    stroke-width: 2px !important;
+    filter: brightness(1.15);
+}
+
+/* ARIA live region pour l'annonce des données */
+#chart-announcer {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+/* Légende des raccourcis clavier */
+.keyboard-help-dialog {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+}
+
+.keyboard-help-dialog.is-visible {
+    display: flex;
+}

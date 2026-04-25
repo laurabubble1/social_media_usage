@@ -2,6 +2,7 @@ import { clearContainer, createSVG, formatNumber, getCssVariable } from '../util
 import { createChartModule } from '../chartFrame.js';
 import { createTooltip, showTooltip, moveTooltip, hideTooltip } from '../chartTooltip.js';
 import { createScoreBands } from '../bandHelpers.js';
+import { makeScatterChartKeyboardAccessible } from '../keyboardChartInteraction.js';
 
 const VIEW_MODES = {
     count: {
@@ -195,6 +196,29 @@ function updateOverlay(state, distribution, mode, xScale) {
         .data(bands, (item) => item.score)
         .join('rect')
         .attr('class', 'diverging-hitbox')
+        .attr('data-keyboard-point', true)
+        .attr('data-keyboard-index', (item, index) => index)
+        .attr('data-tooltip-title', (band) => {
+            const datum = distribution.find((item) => item.score === band.score);
+            return buildImpactSummaryTitle(datum);
+        })
+        .attr('data-tooltip-lines', (band) => {
+            const datum = distribution.find((item) => item.score === band.score);
+            return [
+                `Score d’addiction : ${band.score}`,
+                `Impact négatif : ${datum?.yesCount || 0} / ${datum?.totalCount || 0} (${formatNumber(datum?.yesPercentage || 0, 1)} %)`,
+                `Pas d’impact négatif : ${datum?.noCount || 0} / ${datum?.totalCount || 0} (${formatNumber(datum?.noPercentage || 0, 1)} %)`,
+                `${mode === 'count' ? 'Valeurs affichées' : 'Mode pourcentage'} : ${modeConfig.tooltipFormatter(datum ? modeConfig.positiveAccessor(datum) : 0)} / ${modeConfig.tooltipFormatter(datum ? modeConfig.negativeAccessor(datum) : 0)}`
+            ].join('||');
+        })
+        .attr('data-tooltip-content', (band) => {
+            const datum = distribution.find((item) => item.score === band.score);
+            return `${band.score}: ${buildImpactSummaryTitle(datum)}`;
+        })
+        .attr('data-keyboard-announcement', (band) => {
+            const datum = distribution.find((item) => item.score === band.score);
+            return `Score d’addiction ${band.score}, impact négatif ${formatNumber(datum?.yesPercentage || 0, 1)} %, pas d’impact ${formatNumber(datum?.noPercentage || 0, 1)} %`;
+        })
         .attr('x', (item) => item.x)
         .attr('y', 0)
         .attr('width', (item) => item.width)
@@ -239,6 +263,16 @@ function updateOverlay(state, distribution, mode, xScale) {
             state.activeGuide.attr('opacity', 0);
             hideTooltip(state.tooltip);
         });
+
+    setTimeout(() => {
+        makeScatterChartKeyboardAccessible(state.chartGroup.node(), {
+            onDataSelect: (point) => {
+                const data = point.getAttribute('data-tooltip-content');
+                console.log('Diverging point selected:', data);
+            },
+            cols: Math.max(1, bands.length)
+        });
+    }, 0);
 }
 
 function updateChart(state, distribution, mode, animate = true) {
