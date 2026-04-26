@@ -2,9 +2,6 @@ import { loadStudentData } from './scripts/dataLoader.js';
 import { initializeNavigation } from './scripts/navigation.js';
 import { initializeScrollReveal } from './scripts/scrollReveal.js';
 import { hideLoading, showError } from './scripts/ui.js';
-import { initializeAccessibilityPanel } from './scripts/accessibility.js';
-import { initializeKeyboardShortcuts, makeChartsTabbable } from './scripts/keyboardAccessibility.js';
-import { addKeyboardInteractionStyles } from './scripts/keyboardChartInteraction.js';
 import { renderPlatformComparison } from './scripts/charts/platformComparison.js';
 import { renderUsageImpactBubbles } from './scripts/charts/usageImpactBubbles.js';
 import { renderAddictionUsageHeatmap } from './scripts/charts/addictionUsageHeatmap.js';
@@ -34,9 +31,6 @@ function renderVisualizations(data) {
 
 async function initializeApp() {
     try {
-        addKeyboardInteractionStyles();
-        initializeAccessibilityPanel();
-        initializeKeyboardShortcuts();
         initializeNavigation();
         initializeScrollReveal();
 
@@ -44,7 +38,6 @@ async function initializeApp() {
 
         hideLoading();
         renderVisualizations(data);
-        makeChartsTabbable();
 
         return data;
     } catch (error) {

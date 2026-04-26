@@ -1,7 +1,6 @@
 import { clearContainer, createSVG, formatNumber, getCssVariable } from '../utils.js';
 import { createTooltip, showTooltip, moveTooltip, hideTooltip } from '../chartTooltip.js';
 import { createChartModule } from '../chartFrame.js';
-import { makeScatterChartKeyboardAccessible } from '../keyboardChartInteraction.js';
 
 const SERIES = [
     {
@@ -212,16 +211,6 @@ export function renderUsageImpactBubbles(data, container) {
             .enter()
             .append('circle')
             .attr('class', (datum) => `bubble-point ${datum.seriesKey}`)
-            .attr('data-keyboard-point', true)
-            .attr('data-keyboard-index', (d, i) => i)
-            .attr('data-tooltip-title', (datum) => datum.seriesLabel)
-            .attr('data-tooltip-lines', (datum) => [
-                `Utilisation moyenne : ${formatNumber(datum.usageHours, 1)} h`,
-                `${datum.tooltipLabel} : ${formatNumber(datum.yValue, 2)}`,
-                `Étudiants représentés : ${datum.count}`
-            ].join('||'))
-            .attr('data-tooltip-content', (datum) => `${datum.seriesLabel}: ${formatNumber(datum.yValue, 2)}`)
-            .attr('data-keyboard-announcement', (datum) => `${datum.seriesLabel}: ${formatNumber(datum.yValue, 2)}, utilisation: ${formatNumber(datum.usageHours, 1)} heures`)
             .attr('cx', (datum) => xScale(datum.usageHours))
             .attr('cy', (datum) => yScale(datum.yValue))
             .attr('r', (datum) => areaToRadius(areaScale(datum.count)))
@@ -249,14 +238,4 @@ export function renderUsageImpactBubbles(data, container) {
                 hideTooltip(tooltip);
             });
     });
-
-    // Ajouter l'interaction clavier pour les bulles
-    setTimeout(() => {
-        makeScatterChartKeyboardAccessible(chartContainer, {
-            onDataSelect: (point) => {
-                const data = point.getAttribute('data-tooltip-content');
-                console.log('Bubble selected:', data);
-            }
-        });
-    }, 0);
 }

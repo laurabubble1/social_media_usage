@@ -111,37 +111,6 @@ export function showTooltip(tooltip, event, content) {
     moveTooltip(tooltip, event);
 }
 
-export function showTooltipAt(tooltip, position, content) {
-    activeTooltip = tooltip;
-    cancelPendingHide();
-
-    tooltip
-        .classed('is-fading-out', false)
-        .classed('is-hidden', false)
-        .html(formatTooltipContent(content));
-
-    if (typeof position?.left !== 'number' || typeof position?.top !== 'number') {
-        return;
-    }
-
-    const node = tooltip.node();
-
-    if (!node) {
-        return;
-    }
-
-    const offset = 16;
-    const bounds = node.getBoundingClientRect();
-    const maxLeft = window.innerWidth - bounds.width - offset;
-    const maxTop = window.innerHeight - bounds.height - offset;
-    const left = Math.max(offset, Math.min(position.left, maxLeft));
-    const top = Math.max(offset, Math.min(position.top, maxTop));
-
-    tooltip
-        .style('left', `${left}px`)
-        .style('top', `${top}px`);
-}
-
 export function moveTooltip(tooltip, event) {
     const node = tooltip.node();
 
@@ -173,15 +142,6 @@ export function hideTooltip(tooltip) {
         }, FADE_DURATION_MS);
     }, HIDE_DELAY_MS);
 }
-
-// Exposer les fonctions pour l'accessibilité clavier
-window.__chartTooltip = {
-    showTooltip: (tooltip, event, content) => showTooltip(tooltip, event, content),
-    showTooltipAt: (tooltip, position, content) => showTooltipAt(tooltip, position, content),
-    hideTooltip: (tooltip) => hideTooltip(tooltip),
-    createTooltip: createTooltip,
-    hideActiveTooltip: hideActiveTooltip
-};
 
 export function formatTooltipContent(content) {
     const lines = (content.lines || []).map((line) => `<span>${line}</span>`).join('');

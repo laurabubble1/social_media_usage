@@ -5,12 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Impact des médias sociaux</title>
     <link rel="stylesheet" href="assets/styles/main.css">
-    <link rel="stylesheet" href="assets/styles/accessibility.css">
 </head>
 <body>
-    <a href="#main-content" class="skip-link">Sauter vers le contenu principal</a>
-    
-    <nav role="navigation" aria-label="Navigation principale">
+    <nav>
         <h1>Les médias sociaux</h1>
         <ul id="nav-menu">
             <li><a href="#intro" class="nav-link active">Accueil</a></li>
@@ -21,19 +18,19 @@
         </ul>
     </nav>
 
-    <div class="main-container" role="main">
-        <div class="content" id="main-content">
+    <div class="main-container">
+        <div class="content">
             <div id="intro" class="intro-section story-step is-visible">
                 <div>
                     <h1>Impact des médias sociaux sur le bien-être des étudiants</h1>
-                    <p id="loading" class="loading" aria-live="polite" aria-atomic="true">Chargement des données...</p>
+                    <p id="loading" class="loading">Chargement des données...</p>
                     <p class="intro-description">Nous allons explorer <strong>l'impact des médias sociaux sur le bien-être des étudiants</strong> à travers plusieurs dimensions.
                         Notre analyse se concentre sur les impacts liés <strong>au temps d'utilisation</strong>, <strong>au conflit interpersonnel</strong> et <strong>à l'impact académique</strong>.</p>
                 </div>
             </div>
 
-            <section id="section1" class="story-step" aria-labelledby="section1-title">
-                <h2 id="section1-title">Les plateformes</h2>
+            <section id="section1" class="story-step">
+                <h2>Les plateformes</h2>
                 <p>Avant de débuter, nous allons explorer un peu plus en profondeur les plateformes les plus utilisées que les jeunes ont répondu utiliser le plus, afin de mieux comprendre quels réseaux sociaux ont un impact plus important.
                     Nous analysons ici l'impact des plateformes sur les sujets que nous allons étudier plus en détail ultérieurement. 
                     Ces éléments en question sont le sommeil, la santé mentale, les conflits et la part d'effet académique négatif causé par les médias sociaux.
@@ -43,22 +40,22 @@
                     En effet, bien qu'elle soit la plus utilisée au courant de la journée, cela ne signifie pas que c'est la plateforme qui cause les impacts négatifs, mais que les gens qui utilisent WhatsApp sont plus susceptibles d'avoir des impacts négatifs,
                     ce qui suggère que <strong>l'utilisation de WhatsApp pourrait être un indicateur</strong> ou un facteur qui contribue à ces impacts négatifs.
                 </p>
-                <div class="chart-container" id="viz1" role="img" aria-label="Graphique de comparaison des plateformes de médias sociaux montrant l'impact sur le sommeil, la santé mentale, les conflits et l'impact académique"></div>
+                <div class="chart-container" id="viz1"></div>
             </section>
 
-            <section id="section2" class="story-step" aria-labelledby="section2-title">
-                <h2 id="section2-title">Le temps d'utilisation</h2>
+            <section id="section2" class="story-step">
+                <h2>Le temps d'utilisation</h2>
                 <p>Maintenant que nous avons une bonne idée générale des plateformes auxquelles faire attention, nous allons débuter avec les impacts en lien avec le temps d'utilisation.
                     Celui-ci sera observé avec la santé mentale ainsi que le nombre d'heures de sommeil, ce qui nous permettra de voir comment les deux évoluent quand l'exposition augmente.
                     La santé mentale est un score de 1 à 10, tandis que le temps d'utilisation et le sommeil représentent un temps en heures.
                     Le sommeil et la santé mentale sont lus ensemble, mais ne sont pas normalisés puisque leurs valeurs sont déjà très semblables, tel qu'observé ci-dessous avec des valeurs initiales assez similaires.
                     Nous pouvons voir que les deux descendent à un rythme assez similaire, cependant <strong>la santé mentale commence à descendre à un rythme constant après 2.7 heures d'utilisation</strong> tandis que <strong>le sommeil commence à descendre plus rapidement après 3.4 heures d'utilisation</strong>.
                     </p>
-                <div class="chart-container" id="viz2" role="img" aria-label="Graphique montrant la relation entre le temps d'utilisation des médias sociaux et la santé mentale, avec le sommeil en heures"></div>
+                <div class="chart-container" id="viz2"></div>
             </section>
 
-            <section id="section3" class="story-step" aria-labelledby="section3-title">
-                <h2 id="section3-title">Les conflits</h2>
+            <section id="section3" class="story-step">
+                <h2>Les conflits</h2>
                 <p>Nous allons désormais analyser la provenance des conflits interpersonnels sur les médias sociaux. 
                     Ici, nous observons le nombre de conflits que les étudiants peuvent rencontrer sur les médias sociaux en fonction de leur temps d'utilisation et de leur niveau d'addiction. 
                     La carte met rapidement en évidence <strong>les combinaisons d'addiction et de temps passé qui causent le plus de tensions</strong> sur les plateformes en ligne.
@@ -66,11 +63,11 @@
                     Il est à noter que, évidemment, plus le temps d'utilisation est élevé, plus l'opportunité de vivre des conflits est élevée. Cependant, il est intéressant de voir que le score d'addiction semble être un facteur plus déterminant que le temps d'utilisation pour prédire le nombre de conflits vécus.
                     À noter que <strong>les cases bleues représentent les combinaisons absentes dans les données</strong>, alors que <strong>les cases gris pâle représentent une combinaison sans conflit</strong>, vous pouvez l'observer en les survolant avec votre souris.
                 </p>
-                <div class="chart-container" id="viz3" role="img" aria-label="Heatmap montrant la relation entre le temps d'utilisation, le score d'addiction et le nombre de conflits interpersonnels"></div>
+                <div class="chart-container" id="viz3"></div>
             </section>
 
-            <section id="section4" class="story-step" aria-labelledby="section4-title">
-                <h2 id="section4-title">L'impact académique</h2>
+            <section id="section4" class="story-step">
+                <h2>L'impact académique</h2>
                 <p>Finalement, nous allons analyser l'impact académique des médias sociaux par rapport à l'utilisation, au sommeil et au score d'addiction. Nous avons divisé cela en 3 graphiques de 2 types différents. 
                     Pour les données temporelles, nous utilisons un beeswarm pour lequel chaque point rouge représente un étudiant qui a déclaré que les plateformes avaient un impact négatif sur sa performance académique, et les points verts l'inverse.
                     Le beeswarm suit une ligne temporelle incrémentale, ce qui nous permet de voir après combien d'heures d'utilisation ou de sommeil les impacts académiques négatifs deviennent plus importants.
@@ -80,14 +77,14 @@
                     <strong>L'addiction semble être un facteur très déterminant pour l'impact académique négatif</strong>, ce qui suggère que les étudiants qui se sentent plus dépendants des médias sociaux sont plus susceptibles de ressentir un impact négatif sur leurs performances académiques.
                 </p>
                 <div class="chart-container chart-container-stack chart-container-academic">
-                    <div class="stack-panel stack-panel-beeswarm" id="viz4" role="img" aria-label="Graphique beeswarm montrant l'impact académique des médias sociaux par rapport au temps d'utilisation et aux heures de sommeil"></div>
-                    <div class="stack-panel stack-panel-diverging" id="viz5" role="img" aria-label="Graphique linéaire divergent montrant le pourcentage d'impact académique positif et négatif par score d'addiction"></div>
+                    <div class="stack-panel stack-panel-beeswarm" id="viz4"></div>
+                    <div class="stack-panel stack-panel-diverging" id="viz5"></div>
                 </div>
             </section>
         </div>
     </div>
 
-    <div id="error" class="error is-hidden" role="alert" aria-live="assertive" aria-atomic="true"></div>
+    <div id="error" class="error is-hidden"></div>
 
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script type="module" src="index.js"></script>

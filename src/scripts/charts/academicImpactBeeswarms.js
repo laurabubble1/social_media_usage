@@ -2,7 +2,6 @@ import { clearContainer, createSVG, formatNumber, getCssVariable } from '../util
 import { createTooltip, showTooltip, moveTooltip, hideTooltip } from '../chartTooltip.js';
 import { createChartModule } from '../chartFrame.js';
 import { createBands } from '../bandHelpers.js';
-import { makeBeeswarmKeyboardAccessible } from '../keyboardChartInteraction.js';
 
 const SWARM_CONFIGS = [
     {
@@ -268,45 +267,12 @@ function renderSingleBeeswarm(config, data, parent, tooltip) {
         .enter()
         .append('circle')
         .attr('class', (node) => `beeswarm-dot ${node.impact ? 'negative' : 'positive'}`)
-        .attr('data-keyboard-dot', true)
-        .attr('data-keyboard-index', (d, i) => i)
-        .attr('data-tooltip-title', (node) => `Impact: ${node.impact ? 'Négatif' : 'Positif'}`)
-        .attr('data-tooltip-lines', (node) => `${config.tooltipLabel}: ${config.formatter(node.xValue)}`)
-        .attr('data-tooltip-content', (node) => `${config.tooltipLabel}: ${config.formatter(node.xValue)}, impact: ${node.impact ? 'Négatif' : 'Positif'}`)
-        .attr('data-keyboard-announcement', (node) => `${config.tooltipLabel}: ${config.formatter(node.xValue)}, impact académique: ${node.impact ? 'négatif' : 'positif'}`)
         .attr('cx', (node) => node.x)
         .attr('cy', (node) => node.y)
         .attr('r', 4)
         .attr('fill', (node) => node.impact ? negativeColor : positiveColor)
-        .attr('pointer-events', 'auto')
-        .attr('opacity', 0.88)
-        .on('mouseenter', function (event, node) {
-            d3.select(this).attr('r', 6);
-            showTooltip(tooltip, event, {
-                title: `Impact: ${node.impact ? 'Négatif' : 'Positif'}`,
-                lines: [`${config.tooltipLabel}: ${config.formatter(node.xValue)}`]
-            });
-        })
-        .on('mousemove', (event) => {
-            moveTooltip(tooltip, event);
-        })
-        .on('mouseleave', function () {
-            d3.select(this).attr('r', 4);
-            hideTooltip(tooltip);
-        });
-
-    // Ajouter l'interaction clavier pour les points
-    setTimeout(() => {
-        const beeswarmContainer = svg.node().closest('.beeswarm-canvas');
-        if (beeswarmContainer) {
-            makeBeeswarmKeyboardAccessible(beeswarmContainer, {
-                onDataSelect: (dot) => {
-                    const data = dot.getAttribute('data-tooltip-content');
-                    console.log('Dot selected:', data);
-                }
-            });
-        }
-    }, 0);
+        .attr('pointer-events', 'none')
+        .attr('opacity', 0.88);
 
     svg.append('title').text(config.title);
 }
